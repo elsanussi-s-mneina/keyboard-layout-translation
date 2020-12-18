@@ -1,4 +1,4 @@
-from swappingOutput import swapKeyOutputs, convertKeyMapFromQwertyToDvorak
+from mac_keymap_translation import swapKeyOutputs, convertKeyMapFromQwertyToDvorak
 
 print("running tests")
 

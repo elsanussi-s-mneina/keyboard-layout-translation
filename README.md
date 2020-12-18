@@ -22,3 +22,8 @@ December 2020.
 - Python 3.8.3 (may work on some lower versions)
 - user level access to a terminal/command prompt
 
+### How do I run this? What commands do I use?
+`python3 swappingOutput_tests.py`
+
+### What command do I use to I run the unit tests?
+`python3 -m unittest`
