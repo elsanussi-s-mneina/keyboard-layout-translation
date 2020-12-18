@@ -4,6 +4,39 @@
 # the third entry is the keycode for COLEMAK
 
 
+def getQwertyColemakTranslations():
+    return [
+        (qwerty, colemak)
+        for (qwerty, colemak, dvorak) in qwertyColemakDvorakTranslations
+    ]
+
+
+def getQwertyDvorakTranslations():
+    return [
+        (qwerty, dvorak)
+        for (qwerty, colemak, dvorak) in qwertyColemakDvorakTranslations
+    ]
+
+
+def getColemakDvorakTranslations():
+    return [
+        (colemak, dvorak)
+        for (qwerty, colemak, dvorak) in qwertyColemakDvorakTranslations
+    ]
+
+
+def getDvorakColemakTranslations():
+    return [tuple(reversed(aTuple)) for aTuple in getColemakDvorakTranslations()]
+
+
+def getDvorakQwertyTranslations():
+    return [tuple(reversed(aTuple)) for aTuple in getQwertyDvorakTranslations()]
+
+
+def getColemakQwertyTranslations():
+    return [tuple(reversed(aTuple)) for aTuple in getQwertyColemakTranslations()]
+
+
 # This one only works for lowercase DVORAK.
 qwertyColemakDvorakTranslations = [
     # The numbers row

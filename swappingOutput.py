@@ -2,7 +2,10 @@
 # for Mac OS Catalina.
 # Started December 2020.
 import re
-from keycodeTranslations import qwertyColemakDvorakTranslations
+from keycodeTranslations import (
+    qwertyColemakDvorakTranslations,
+    getQwertyDvorakTranslations,
+)
 
 input = """		<key code="0" output="A"/>
 			<key code="1" output="S"/>"""
@@ -32,6 +35,8 @@ def replaceOutput(keyCode1, newOutput, xmlInput):
 
 
 def swapKeyOutputs(keyCode1, keyCode2, xmlInput):
+    """This is only useful for swapping two keys at a time. It becomes a mess when
+    you need to swap more than two keys. This function is not as useful as I thought it would be."""
     output1 = extractOutput(keyCode1, xmlInput)
     output2 = extractOutput(keyCode2, xmlInput)
     if not output1 or not output2:
@@ -42,22 +47,18 @@ def swapKeyOutputs(keyCode1, keyCode2, xmlInput):
     result = replaceOutput(keyCode1, output2, xmlInput)
     result = replaceOutput(keyCode2, output1, result)
 
-    # prevent these keys from being swapped again.
-    # result = mangleKeyCode(keyCode1, result)
-    # result = mangleKeyCode(keyCode2, result)
-
     return result
 
 
-def convertKeyMapFromQwertyToDvorak(xmlForAKeyMap):
+def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
     # Calculate all the changes we need to make. I.e. determine
     # what character belongs in which key.
     changesToWrite = []
-    for (qwertyCode, _, dvorakCode) in qwertyColemakDvorakTranslations:
+    for (sourceKeyCode, destinationKeyCode) in keyCodeTranslationList:
         # records that we are to set the output of the key at the dvorakCode,
         # to what the output is in the key at the qwerty code.
-        outputOnKey = extractOutput(qwertyCode, xmlForAKeyMap)
-        changeToWrite = (dvorakCode, outputOnKey)
+        outputOnKey = extractOutput(sourceKeyCode, xmlForAKeyMap)
+        changeToWrite = (destinationKeyCode, outputOnKey)
         changesToWrite.append(changeToWrite)
 
     result = xmlForAKeyMap
@@ -66,6 +67,10 @@ def convertKeyMapFromQwertyToDvorak(xmlForAKeyMap):
         result = replaceOutput(keyCode, output, result)
 
     return result
+
+
+def convertKeyMapFromQwertyToDvorak(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getQwertyDvorakTranslations())
 
 
 sampleQWERTY = """		<keyMap index="0" baseMapSet="mapSet" baseIndex="3">
