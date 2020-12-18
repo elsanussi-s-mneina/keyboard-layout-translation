@@ -16,5 +16,9 @@ Technically, a person can use a program called Ukelele which provides a user int
 I intend to implement some functions for swapping the values of keys. I do not intend to implement a graphical user interface, nor the ability to process a whole file at once. The user will have to copy the XML or formatted text from the keyboard layout many lines at a time and paste it in.
 
 ### When was this started?
-Decemebr 
+December 2020.
+
+### What do I need to run this?
+- Python 3.8.3 (may work on some lower versions)
+- user level access to a terminal/command prompt
 
