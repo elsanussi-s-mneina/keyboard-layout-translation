@@ -3,7 +3,6 @@ import unittest
 from mac_keymap_translation import (
     convertKeyMapFromQwertyToDvorak,
     extractOutput,
-    swapKeyOutputs,
 )
 
 
@@ -13,17 +12,6 @@ class TestMacKeymapTranslation(unittest.TestCase):
 					<key code="1" output="S"/>"""
         expectedOutput = "A"
         actualOutput = extractOutput(0, input)
-        self.assertEqual(actualOutput, expectedOutput)
-
-    def test_swap_key_outputs(self):
-        input = """		<key code="0" output="A"/>
-			<key code="1" output="S"/>"""
-
-        expectedOutput = """		<key code="0" output="S"/>
-			<key code="1" output="A"/>"""
-        actualOutput = swapKeyOutputs(0, 1, input)
-        # print("expected:\n", expectedOutput)
-        # print("actual:\n", actualOutput)
         self.assertEqual(actualOutput, expectedOutput)
 
     def test_convert_from_qwerty_to_dvorak(self):
