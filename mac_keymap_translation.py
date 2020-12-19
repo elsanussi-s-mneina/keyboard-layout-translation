@@ -82,14 +82,14 @@ def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
     for (sourceKeyCode, destinationKeyCode) in keyCodeTranslationList:
         # records that we are to set the output of the key at the dvorakCode,
         # to what the output is in the key at the qwerty code.
-        outputOnKey = extractOutput(sourceKeyCode, xmlForAKeyMap)
+        outputOnKey = extractOutputOrAction(sourceKeyCode, xmlForAKeyMap)
         changeToWrite = (destinationKeyCode, outputOnKey)
         changesToWrite.append(changeToWrite)
 
     result = xmlForAKeyMap
     # Make those changes
     for (keyCode, output) in changesToWrite:
-        result = replaceOutput(keyCode, output, result)
+        result = replaceOutputOrAction(keyCode, output, result)
 
     return result
 
