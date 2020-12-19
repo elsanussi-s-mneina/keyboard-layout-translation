@@ -13,7 +13,19 @@ from keycodeTranslations import (
 
 
 def extractOutput(keyCode1, xmlInput):
-    regularExpression = r"code=\"" + str(keyCode1) + '"' + r"\s+output=\"(.*?)\""
+    regularExpression = r"code=\"" + str(keyCode1) + '"' + r"\s+output\s*=\s*\"(.*?)\""
+    output1 = re.search(regularExpression, xmlInput)
+    if output1:
+        return output1.group(1)
+    else:
+        return None
+
+
+def extractOutputOrAction(keyCode1, xmlInput):
+    """Sometimes a key starts an action, this will allow replacement of those keys"""
+    regularExpression = (
+        r"code=\"" + str(keyCode1) + '"' + r"\s+(output=\".*?\"|action=\".*?\")"
+    )
     output1 = re.search(regularExpression, xmlInput)
     if output1:
         return output1.group(1)
@@ -22,13 +34,40 @@ def extractOutput(keyCode1, xmlInput):
 
 
 def makeReplacementFunction(replacementOutput):
+    """
+    changes something like 'output="S"' to 'output="D"'
+    """
     return lambda matchObject: matchObject.group(1) + replacementOutput + '"'
 
 
+def makeAttributeReplacementFunction(replacementOutput):
+    """
+    changes something like 'output="S"' to 'action="act1"'
+    """
+    return lambda matchObject: matchObject.group(1) + replacementOutput
+
+
 def replaceOutput(keyCode1, newOutput, xmlInput):
-    regularExpression = r"(code=\"" + str(keyCode1) + '"' + r"\s+output=\")(.*?)\""
+    regularExpression = (
+        r"(code=\"" + str(keyCode1) + '"' + r"\s+output\s*=\s*\")(.*?)\""
+    )
     if re.search(regularExpression, xmlInput):
         return re.sub(regularExpression, makeReplacementFunction(newOutput), xmlInput)
+    else:
+        return xmlInput
+
+
+def replaceOutputOrAction(keyCode1, newOutput, xmlInput):
+    regularExpression = (
+        r"(code=\""
+        + str(keyCode1)
+        + '"'
+        + r"\s+)(output\s*=\s*\".*?\"|action\s*=\s*\".*?\")"
+    )
+    if re.search(regularExpression, xmlInput):
+        return re.sub(
+            regularExpression, makeAttributeReplacementFunction(newOutput), xmlInput
+        )
     else:
         return xmlInput
 

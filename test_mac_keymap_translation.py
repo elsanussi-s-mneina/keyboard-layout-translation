@@ -3,6 +3,9 @@ import unittest
 from mac_keymap_translation import (
     convertKeyMapFromQwertyToDvorak,
     extractOutput,
+    extractOutputOrAction,
+    replaceOutput,
+    replaceOutputOrAction,
 )
 
 
@@ -12,6 +15,125 @@ class TestMacKeymapTranslation(unittest.TestCase):
 					<key code="1" output="S"/>"""
         expectedOutput = "A"
         actualOutput = extractOutput(0, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_spaces_should_not_matter(self):
+        input = """		<key code="0" output   \t= "A"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = "A"
+        actualOutput = extractOutput(0, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_does_not_extract_action(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = None
+        actualOutput = extractOutput(0, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_when_key_code_not_found_returns_none(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = None
+        actualOutput = extractOutput(7777, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_or_action_does_extract_action_with_attribute(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = 'action="AnAction"'
+        actualOutput = extractOutputOrAction(0, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_or_action_does_extract_output_with_attribute(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = 'output="S"'
+        actualOutput = extractOutputOrAction(1, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_extract_output_or_action_returns_none_when_missing(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = None
+        actualOutput = extractOutputOrAction(93, input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_when_key_code_missing_does_not_change_xml(self):
+        xmlInput = """	<hi thet nothing is around> """
+        expectedOutput = xmlInput
+        actualOutput = replaceOutput(93, 'output="R"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_does_replace_output(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = """		<key code="0" action="AnAction"/>
+					<key code="1" output="E"/>"""
+        actualOutput = replaceOutput(1, "E", input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_spaces_do_not_matter_but_are_preserved(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output\t  =   "S"/>"""
+        expectedOutput = """		<key code="0" action="AnAction"/>
+					<key code="1" output\t  =   "M"/>"""
+        actualOutput = replaceOutput(1, "M", input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_does_not_replace_action(self):
+        input = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        actualOutput = replaceOutput(0, "E", input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_when_key_code_missing_does_not_change_xml(self):
+        xmlInput = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = xmlInput
+        actualOutput = replaceOutputOrAction(93, 'output="R"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_replaces_action_with_output(self):
+        xmlInput = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = """		<key code="0" output="R"/>
+					<key code="1" output="S"/>"""
+        actualOutput = replaceOutputOrAction(0, 'output="R"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_replaces_output_with_action(self):
+        xmlInput = """		<key code="0" action="AnAction"/>
+					<key code="1" output="S"/>"""
+        expectedOutput = """		<key code="0" action="AnAction"/>
+					<key code="1" action="act78"/>"""
+        actualOutput = replaceOutputOrAction(1, 'action="act78"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_replaces_output_with_action(self):
+        xmlInput = """		<key code="0" action="AnAction"/>
+					<key code="7" action="otherAct2"/>"""
+        expectedOutput = """		<key code="0" action="AnAction"/>
+					<key code="7" action="otherAct4"/>"""
+        actualOutput = replaceOutputOrAction(7, 'action="otherAct4"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_replaces_output_with_output(self):
+        xmlInput = """		<key code="9" output="x"/>
+					<key code="7" output="q"/>"""
+        expectedOutput = """		<key code="9" output="x"/>
+					<key code="7" output="y"/>"""
+        actualOutput = replaceOutputOrAction(7, 'output="y"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_replace_output_or_action_spaces_should_not_matter(self):
+        xmlInput = """		<key code="9" output =  "x"/>
+					<key code="7" output ="q"/>"""
+        expectedOutput = """		<key code="9" output =  "x"/>
+					<key code="7" output="y"/>"""
+        actualOutput = replaceOutputOrAction(7, 'output="y"', xmlInput)
         self.assertEqual(actualOutput, expectedOutput)
 
     def test_convert_from_qwerty_to_dvorak(self):
@@ -129,7 +251,7 @@ class TestMacKeymapTranslation(unittest.TestCase):
 			<key code="44" output="z"/>
 		</keyMap>
 		"""
-        print("converted from Qwerty to DVORAK:")
+        # print("converted from Qwerty to DVORAK:")
         actualDvorak = convertKeyMapFromQwertyToDvorak(sampleQWERTY)
-        print(actualDvorak)
+        # print(actualDvorak)
         self.assertEqual(actualDvorak, expectedDvorak)
