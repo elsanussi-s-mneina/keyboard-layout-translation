@@ -3,8 +3,12 @@
 # Started December 2020.
 import re
 from keycodeTranslations import (
-    qwertyColemakDvorakTranslations,
+    getQwertyColemakTranslations,
     getQwertyDvorakTranslations,
+    getColemakDvorakTranslations,
+    getDvorakColemakTranslations,
+    getDvorakQwertyTranslations,
+    getColemakQwertyTranslations,
 )
 
 
@@ -36,8 +40,8 @@ def swapKeyOutputs(keyCode1, keyCode2, xmlInput):
     if not output1 or not output2:
         return xmlInput
 
-    print("keycode:", keyCode1, "output:", output1)
-    print("keycode:", keyCode2, "output:", output2)
+    # print("keycode:", keyCode1, "output:", output1)
+    # print("keycode:", keyCode2, "output:", output2)
     result = replaceOutput(keyCode1, output2, xmlInput)
     result = replaceOutput(keyCode2, output1, result)
 
@@ -65,3 +69,23 @@ def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
 
 def convertKeyMapFromQwertyToDvorak(xmlForAKeyMap):
     return convertKeyMapUsingTranslation(xmlForAKeyMap, getQwertyDvorakTranslations())
+
+
+def convertKeyMapFromQwertyToColemak(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getQwertyColemakTranslations())
+
+
+def convertKeyMapFromDvorakToQwerty(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getDvorakQwertyTranslations())
+
+
+def convertKeyMapFromDvorakToColemak(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getDvorakColemakTranslations())
+
+
+def convertKeyMapFromColemakToDvorak(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getColemakDvorakTranslations())
+
+
+def convertKeyMapFromColemakToQwerty(xmlForAKeyMap):
+    return convertKeyMapUsingTranslation(xmlForAKeyMap, getColemakQwertyTranslations())

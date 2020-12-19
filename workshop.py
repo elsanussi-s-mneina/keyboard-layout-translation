@@ -1,14 +1,7 @@
-from mac_keymap_translation import swapKeyOutputs, convertKeyMapFromQwertyToDvorak
-
-print("running tests")
-
-input = """		<key code="0" output="A"/>
-			<key code="1" output="S"/>"""
-
-expectedOutput = """		<key code="0" output="S"/>
-			<key code="1" output="A"/>"""
+from mac_keymap_translation import convertKeyMapFromQwertyToDvorak
 
 
+# Replace the following string with the QWERTY keymap XML you want to convert.
 sampleQWERTY = """		<keyMap index="0" baseMapSet="mapSet" baseIndex="3">
 		<!-- Top row, from left to right on ANSI Keyboard -->
 			<key code="50" output="`"/>
@@ -51,7 +44,7 @@ sampleQWERTY = """		<keyMap index="0" baseMapSet="mapSet" baseIndex="3">
 			<key code="40" output="k"/>
 			<key code="37" output="l"/>
 			<key code="41" output=";"/>
-			<key code="39" output="&#39;"/> <!-- Single quote -->
+			<key code="39" output="&#39;"/>
 
 		<!-- Fourth row from top, from left to right -->
 			<key code="6" output="z"/>
@@ -67,10 +60,6 @@ sampleQWERTY = """		<keyMap index="0" baseMapSet="mapSet" baseIndex="3">
 		</keyMap>
 """
 
-
-output = swapKeyOutputs(0, 1, input)
-print("expected:\n", expectedOutput)
-print("actual:\n", output)
 
 print("converted from Qwerty to DVORAK:")
 print(convertKeyMapFromQwertyToDvorak(sampleQWERTY))

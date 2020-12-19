@@ -23,7 +23,7 @@ December 2020.
 - user level access to a terminal/command prompt
 
 ### How do I run this? What commands do I use?
-`python3 swappingOutput_tests.py`
+`python3 workshop.py`
 
 ### What command do I use to I run the unit tests?
 `python3 -m unittest`
