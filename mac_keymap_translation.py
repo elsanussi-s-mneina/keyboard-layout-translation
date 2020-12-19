@@ -61,8 +61,7 @@ def replaceOutputOrAction(keyCode1, newOutput, xmlInput):
     regularExpression = (
         r"(code=\""
         + str(keyCode1)
-        + '"'
-        + r"\s+)(output\s*=\s*\".*?\"|action\s*=\s*\".*?\")"
+        + r"\"\s+)(output\s*=\s*\".*?\"|action\s*=\s*\".*?\")"
     )
     if re.search(regularExpression, xmlInput):
         return re.sub(
@@ -83,8 +82,9 @@ def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
         # records that we are to set the output of the key at the dvorakCode,
         # to what the output is in the key at the qwerty code.
         outputOnKey = extractOutputOrAction(sourceKeyCode, xmlForAKeyMap)
-        changeToWrite = (destinationKeyCode, outputOnKey)
-        changesToWrite.append(changeToWrite)
+        if outputOnKey is not None:
+            changeToWrite = (destinationKeyCode, outputOnKey)
+            changesToWrite.append(changeToWrite)
 
     result = xmlForAKeyMap
     # Make those changes

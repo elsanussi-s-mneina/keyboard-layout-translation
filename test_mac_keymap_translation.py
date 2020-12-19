@@ -96,6 +96,12 @@ class TestMacKeymapTranslation(unittest.TestCase):
         actualOutput = replaceOutputOrAction(93, 'output="R"', xmlInput)
         self.assertEqual(actualOutput, expectedOutput)
 
+    def test_replace_output_or_action_when_key_code_missing_does_not_change_xml(self):
+        xmlInput = """   """
+        expectedOutput = xmlInput
+        actualOutput = replaceOutputOrAction(93, 'output="R"', xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
     def test_replace_output_or_action_replaces_action_with_output(self):
         xmlInput = """		<key code="0" action="AnAction"/>
 					<key code="1" output="S"/>"""
