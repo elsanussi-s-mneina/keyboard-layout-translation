@@ -25,5 +25,11 @@ December 2020.
 ### How do I run this? What commands do I use?
 `python3 workshop.py`
 
+### How to run this without editing Python files
+Put a keymaps in a file titled "qwertyKeyMapsInput.txt"
+then run:
+
+`python3 workshopForMultipleKeymaps.py`
+
 ### What command do I use to I run the unit tests?
 `python3 -m unittest`
