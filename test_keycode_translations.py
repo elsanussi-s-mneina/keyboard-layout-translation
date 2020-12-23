@@ -1,50 +1,58 @@
 import unittest
 
-from keycodeTranslations import qwertyColemakDvorakWorkmanTranslations
+from keycodeTranslations import (
+    qwertyColemakTranslations,
+    qwertyDvorakTranslations,
+    qwertyWorkmanTranslations,
+)
 
 
 class TestKeycodeTranslations(unittest.TestCase):
-    def test_there_should_be_no_duplicate_keys_in_any_column(self):
-        qwertySet = set()
-        colemakSet = set()
-        dvorakSet = set()
-        workmanSet = set()
+    def assert_no_duplicate_key_codes(
+        self, translationTable, sourceName, destinationName
+    ):
+        sourceSet = set()
+        destinationSet = set()
+        sourceSetSize = 0
+        destinationSetSize = 0
+
         duplicatesFound = False
 
-        currentQwertySetSize = 0
-        currentColemakSetSize = 0
-        currentDvorakSetSize = 0
-        currentWorkmanSetSize = 0
-        for (
-            qwerty,
-            colemak,
-            dvorak,
-            workman,
-        ) in qwertyColemakDvorakWorkmanTranslations:
-            qwertySet.add(qwerty)
-            colemakSet.add(colemak)
-            dvorakSet.add(dvorak)
-            workmanSet.add(workman)
+        for (sourceKeyCode, destinationKeyCode) in translationTable:
+            sourceSet.add(sourceKeyCode)
+            destinationSet.add(destinationKeyCode)
 
-            if currentQwertySetSize == len(qwertySet):
+            if sourceSetSize == len(sourceSet):
                 duplicatesFound = True
-                print("There is a duplicate key code on QWERTY:", qwerty)
+                print(
+                    "There is a duplicate key code on",
+                    sourceName,
+                    "key code:",
+                    sourceKeyCode,
+                )
 
-            if currentColemakSetSize == len(colemakSet):
+            if destinationSetSize == len(destinationSet):
                 duplicatesFound = True
-                print("There is a duplicate key code on Colemak:", colemak)
+                print(
+                    "There is a duplicate key code on",
+                    destinationName,
+                    "key code:",
+                    destinationKeyCode,
+                )
 
-            if currentDvorakSetSize == len(dvorakSet):
-                duplicatesFound = True
-                print("There is a duplicate key code on Dvorak:", dvorak)
-
-            if currentWorkmanSetSize == len(workmanSet):
-                duplicatesFound = True
-                print("There is a duplicate key code on workman:", workman)
-
-            currentQwertySetSize += 1
-            currentDvorakSetSize += 1
-            currentColemakSetSize += 1
-            currentWorkmanSetSize += 1
-
+            sourceSetSize += 1
+            destinationSetSize += 1
         self.assertFalse(duplicatesFound)
+
+    def test_lack_of_duplicates_in_colemak_translation_table(self):
+        self.assert_no_duplicate_key_codes(
+            qwertyColemakTranslations, "qwerty", "colemak"
+        )
+
+    def test_lack_of_duplicates_in_dvorak_translation_table(self):
+        self.assert_no_duplicate_key_codes(qwertyDvorakTranslations, "qwerty", "dvorak")
+
+    def test_lack_of_duplicates_in_workman_translation_table(self):
+        self.assert_no_duplicate_key_codes(
+            qwertyWorkmanTranslations, "qwerty", "workman"
+        )
