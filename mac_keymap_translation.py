@@ -76,7 +76,7 @@ def replaceOutputOrAction(keyCode1, newOutput, xmlInput):
 def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
     # Calculate all the changes we need to make. I.e. determine
     # what character belongs in which key.
-    print(keyCodeTranslationList)
+
     changesToWrite = []
     for (sourceKeyCode, destinationKeyCode) in keyCodeTranslationList:
         # records that we are to set the output of the key at the dvorakCode,
@@ -87,9 +87,7 @@ def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
             changesToWrite.append(changeToWrite)
 
     result = xmlForAKeyMap
-    print("changes to write:")
-    if changesToWrite:
-        print("\n".join(map(str, sorted(changesToWrite))))
+
     # Make those changes
     for (keyCode, output) in changesToWrite:
         result = replaceOutputOrAction(keyCode, output, result)
