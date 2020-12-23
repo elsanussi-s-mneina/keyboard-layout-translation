@@ -6,6 +6,8 @@ from keycodeTranslations import (
     qwertyWorkmanTranslations,
 )
 
+import windows_keycode_translation_tables
+
 
 class TestKeycodeTranslations(unittest.TestCase):
     def assert_no_duplicate_key_codes(
@@ -55,4 +57,9 @@ class TestKeycodeTranslations(unittest.TestCase):
     def test_lack_of_duplicates_in_workman_translation_table(self):
         self.assert_no_duplicate_key_codes(
             qwertyWorkmanTranslations, "qwerty", "workman"
+        )
+
+    def test_lack_of_duplicates_in_windows_dvorak_translation_table(self):
+        self.assert_no_duplicate_key_codes(
+            windows_keycode_translation_tables.qwertyDvorakTranslations, "(windows) qwerty", "dvorak"
         )
