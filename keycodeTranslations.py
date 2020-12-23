@@ -1,9 +1,3 @@
-# format a list of tuples
-# the first entry is the keycode for QWERTY,
-# the second entry is the keycode for DVORAK,
-# the third entry is the keycode for COLEMAK
-
-
 def getQwertyColemakTranslations():
     return [
         (qwerty, colemak)
@@ -25,31 +19,6 @@ def getQwertyWorkmanTranslations():
     ]
 
 
-def getColemakDvorakTranslations():
-    return [
-        (colemak, dvorak)
-        for (qwerty, colemak, dvorak, workman) in qwertyColemakDvorakWorkmanTranslations
-    ]
-
-
-def getColemakWorkmanTranslations():
-    return [
-        (colemak, workman)
-        for (qwerty, colemak, dvorak, workman) in qwertyColemakDvorakWorkmanTranslations
-    ]
-
-
-def getDvorakWorkmanTranslations():
-    return [
-        (dvorak, workman)
-        for (qwerty, colemak, dvorak, workman) in qwertyColemakDvorakWorkmanTranslations
-    ]
-
-
-def getDvorakColemakTranslations():
-    return [tuple(reversed(aTuple)) for aTuple in getColemakDvorakTranslations()]
-
-
 def getDvorakQwertyTranslations():
     return [tuple(reversed(aTuple)) for aTuple in getQwertyDvorakTranslations()]
 
@@ -62,15 +31,12 @@ def getWorkmanQwertyTranslations():
     return [tuple(reversed(aTuple)) for aTuple in getQwertyWorkmanTranslations()]
 
 
-def getWorkmanColemakTranslations():
-    return [tuple(reversed(aTuple)) for aTuple in getColemakWorkmanTranslations()]
+# format a list of tuples
+# the first entry is the keycode for QWERTY,
+# the second entry is the keycode for DVORAK,
+# the third entry is the keycode for COLEMAK
 
 
-def getWorkmanDvorakTranslations():
-    return [tuple(reversed(aTuple)) for aTuple in getDvorakWorkmanTranslations()]
-
-
-# This one only works for lowercase DVORAK.
 qwertyColemakDvorakWorkmanTranslations = [
     # The numbers row
     (27, 27, 39, 27),  # -

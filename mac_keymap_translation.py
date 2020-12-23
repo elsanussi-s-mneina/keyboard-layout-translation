@@ -6,12 +6,8 @@ from keycodeTranslations import (
     getQwertyColemakTranslations,
     getQwertyDvorakTranslations,
     getQwertyWorkmanTranslations,
-    getColemakDvorakTranslations,
-    getDvorakColemakTranslations,
     getDvorakQwertyTranslations,
-    getDvorakWorkmanTranslations,
     getColemakQwertyTranslations,
-    getColemakWorkmanTranslations,
 )
 
 
@@ -118,15 +114,21 @@ def convertKeyMapFromDvorakToQwerty(xmlForAKeyMap):
 
 
 def convertKeyMapFromDvorakToColemak(xmlForAKeyMap):
-    return convertKeyMapUsingTranslation(xmlForAKeyMap, getDvorakColemakTranslations())
+    return convertKeyMapFromQwertyToColemak(
+        convertKeyMapFromDvorakToQwerty(xmlForAKeyMap)
+    )
 
 
 def convertKeyMapFromDvorakToWorkman(xmlForAKeyMap):
-    return convertKeyMapUsingTranslation(xmlForAKeyMap, getDvorakWorkmanTranslations())
+    return convertKeyMapFromQwertyToWorkman(
+        convertKeyMapFromDvorakToQwerty(xmlForAKeyMap)
+    )
 
 
 def convertKeyMapFromColemakToDvorak(xmlForAKeyMap):
-    return convertKeyMapUsingTranslation(xmlForAKeyMap, getColemakDvorakTranslations())
+    return convertKeyMapFromQwertyToDvorak(
+        convertKeyMapFromColemakToQwerty(xmlForAKeyMap)
+    )
 
 
 def convertKeyMapFromColemakToQwerty(xmlForAKeyMap):
@@ -134,4 +136,6 @@ def convertKeyMapFromColemakToQwerty(xmlForAKeyMap):
 
 
 def convertKeyMapFromColemakToWorkman(xmlForAKeyMap):
-    return convertKeyMapUsingTranslation(xmlForAKeyMap, getColemakWorkmanTranslations())
+    return convertKeyMapFromQwertyToWorkman(
+        convertKeyMapFromColemakToQwerty(xmlForAKeyMap)
+    )
