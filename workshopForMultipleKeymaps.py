@@ -1,4 +1,8 @@
-from main import convertKeyMapsFromQwertyToDvorak, convertKeyMapsFromQwertyToColemak
+from main import (
+    convertKeyMapsFromQwertyToDvorak,
+    convertKeyMapsFromQwertyToColemak,
+    convertKeyMapsFromQwertyToWorkman,
+)
 
 
 inputFile = open("qwertyKeyMapsInput.txt", "r")
@@ -19,3 +23,10 @@ colemakKeyMaps = convertKeyMapsFromQwertyToColemak(qwertyKeymaps)
 colemakOutFile = open("colemakKeyMapsOutput.txt", "w")
 colemakOutFile.write(colemakKeyMaps)
 colemakOutFile.close()
+
+
+print("converted from QWERTY to Workman, and written to a file.")
+workmanKeyMaps = convertKeyMapsFromQwertyToWorkman(qwertyKeymaps)
+workmanOutFile = open("workmanKeyMapsOutput.txt", "w")
+workmanOutFile.write(workmanKeyMaps)
+workmanOutFile.close()

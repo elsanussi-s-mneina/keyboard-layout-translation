@@ -5,10 +5,13 @@ import re
 from mac_keymap_translation import (
     convertKeyMapFromQwertyToDvorak,
     convertKeyMapFromQwertyToColemak,
+    convertKeyMapFromQwertyToWorkman,
     convertKeyMapFromDvorakToQwerty,
     convertKeyMapFromDvorakToColemak,
+    convertKeyMapFromDvorakToWorkman,
     convertKeyMapFromColemakToDvorak,
     convertKeyMapFromColemakToQwerty,
+    convertKeyMapFromColemakToWorkman,
 )
 
 from keymap_splitter import splitIntoKeymaps
@@ -31,6 +34,12 @@ def convertKeyMapsFromQwertyToColemak(xmlForKeyMaps):
     )
 
 
+def convertKeyMapsFromQwertyToWorkman(xmlForKeyMaps):
+    return convertKeyMapsFromOneLayoutToAnother(
+        xmlForKeyMaps, convertKeyMapFromQwertyToWorkman
+    )
+
+
 def convertKeyMapsFromDvorakToQwerty(xmlForKeyMaps):
     return convertKeyMapsFromOneLayoutToAnother(
         xmlForKeyMaps, convertKeyMapFromDvorakToQwerty
@@ -43,6 +52,12 @@ def convertKeyMapsFromDvorakToColemak(xmlForKeyMaps):
     )
 
 
+def convertKeyMapsFromDvorakToWorkman(xmlForKeyMaps):
+    return convertKeyMapsFromOneLayoutToAnother(
+        xmlForKeyMaps, convertKeyMapFromDvorakToWorkman
+    )
+
+
 def convertKeyMapsFromColemakToQwerty(xmlForKeyMaps):
     return convertKeyMapsFromOneLayoutToAnother(
         xmlForKeyMaps, convertKeyMapFromColemakToQwerty
@@ -52,4 +67,10 @@ def convertKeyMapsFromColemakToQwerty(xmlForKeyMaps):
 def convertKeyMapsFromColemakToDvorak(xmlForKeyMaps):
     return convertKeyMapsFromOneLayoutToAnother(
         xmlForKeyMaps, convertKeyMapFromColemakToDvorak
+    )
+
+
+def convertKeyMapsFromColemakToWorkman(xmlForKeyMaps):
+    return convertKeyMapsFromOneLayoutToAnother(
+        xmlForKeyMaps, convertKeyMapFromColemakToWorkman
     )
