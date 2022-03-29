@@ -1,6 +1,6 @@
 import unittest
 
-from keymap_splitter import hasKeyMap, splitIntoKeymaps
+from keymap_splitter import hasKeyMap, splitIntoKeymaps, splitIntoKeymapsAndPartsBeforeAndAfterKeymaps
 
 
 class TestKeymapSplitter(unittest.TestCase):
@@ -107,4 +107,10 @@ class TestKeymapSplitter(unittest.TestCase):
             """<keyMap index="4">a xyz</keyMap>""",
         ]
         actualOutput = splitIntoKeymaps(input)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_split_into_key_maps_before_and_after(self):
+        input = "hello <keyMap 1></keyMap><keyMap 2></keyMap> hi"
+        expectedOutput = ['hello ', '<keyMap 1></keyMap>', '<keyMap 2></keyMap>', ' hi']
+        actualOutput = splitIntoKeymapsAndPartsBeforeAndAfterKeymaps(input)
         self.assertEqual(actualOutput, expectedOutput)

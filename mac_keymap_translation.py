@@ -46,6 +46,9 @@ def makeAttributeReplacementFunction(replacementOutput):
     return lambda matchObject: matchObject.group(1) + replacementOutput
 
 
+def makeKeyCodeReplacementFunction(replacementOutput):
+    return lambda matchObject: replacementOutput + matchObject.group(2)
+
 def replaceOutput(keyCode1, newOutput, xmlInput):
     regularExpression = (
         r"(code=\"" + str(keyCode1) + '"' + r"\s+output\s*=\s*\")(.*?)\""
@@ -54,6 +57,15 @@ def replaceOutput(keyCode1, newOutput, xmlInput):
         return re.sub(regularExpression, makeReplacementFunction(newOutput), xmlInput)
     else:
         return xmlInput
+
+
+def keyElementWithSpecificKeyCodeExists(keyCode1, xmlInput):
+    regularExpression = (
+        r"(code=\""
+        + str(keyCode1)
+        + r"\"\s+)(output\s*=\s*\".*?\"|action\s*=\s*\".*?\")"
+    )
+    return re.search(regularExpression, xmlInput) is not None
 
 
 def replaceOutputOrAction(keyCode1, newOutput, xmlInput):
@@ -65,6 +77,19 @@ def replaceOutputOrAction(keyCode1, newOutput, xmlInput):
     if re.search(regularExpression, xmlInput):
         return re.sub(
             regularExpression, makeAttributeReplacementFunction(newOutput), xmlInput
+        )
+    else:
+        return xmlInput
+
+def replaceKeyCode(sourceKeyCode, destinationKeyCode, xmlInput):
+    regularExpression = (
+        r"(code=\""
+        + str(sourceKeyCode)
+        + r"\"\s+)(output\s*=\s*\".*?\"|action\s*=\s*\".*?\")"
+    )
+    if re.search(regularExpression, xmlInput):
+        return re.sub(
+            regularExpression, makeKeyCodeReplacementFunction("code=\"" + str(destinationKeyCode) + "\" "), xmlInput
         )
     else:
         return xmlInput
@@ -83,15 +108,17 @@ def convertKeyMapUsingTranslation(xmlForAKeyMap, keyCodeTranslationList):
         # to what the output is in the key at the qwerty code.
         outputOnKey = extractOutputOrAction(sourceKeyCode, xmlForAKeyMap)
         if outputOnKey is not None:
-            changeToWrite = (destinationKeyCode, outputOnKey)
+            changeToWrite = (sourceKeyCode, destinationKeyCode, outputOnKey)
             changesToWrite.append(changeToWrite)
 
     result = xmlForAKeyMap
 
     # Make those changes
-    for (keyCode, output) in changesToWrite:
-        result = replaceOutputOrAction(keyCode, output, result)
-
+    for (sourceKeyCode, destinationKeyCode, output) in changesToWrite:
+        if keyElementWithSpecificKeyCodeExists(destinationKeyCode, result):
+            result = replaceOutputOrAction(destinationKeyCode, output, result)
+        elif keyElementWithSpecificKeyCodeExists(sourceKeyCode, result):
+            result = replaceKeyCode(sourceKeyCode, destinationKeyCode, result)
     return result
 
 

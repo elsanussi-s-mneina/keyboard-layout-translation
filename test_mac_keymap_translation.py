@@ -6,6 +6,7 @@ from mac_keymap_translation import (
     extractOutputOrAction,
     replaceOutput,
     replaceOutputOrAction,
+    replaceKeyCode,
 )
 
 
@@ -142,6 +143,79 @@ class TestMacKeymapTranslation(unittest.TestCase):
         actualOutput = replaceOutputOrAction(7, 'output="y"', xmlInput)
         self.assertEqual(actualOutput, expectedOutput)
 
+    def test_replace_key_code(self):
+        xmlInput = """<key code="26" output="forever"/>"""
+        expectedOutput = """<key code="33" output="forever"/>"""
+        actualOutput = replaceKeyCode(26, 33, xmlInput)
+        self.assertEqual(actualOutput, expectedOutput)
+
+    def test_convert_from_qwerty_to_dvorak_when_some_key_codes_are_missing(self):
+        # The following is from the Unicode Hex input keyboard layout
+        sampleQWERTY = """
+        <keyMap index="3">
+            <key code="0" action="a10"/>
+            <key code="2" action="a13"/>
+            <key code="3" action="a15"/>
+            <key code="8" action="a12"/>
+            <key code="11" action="a11"/>
+            <key code="14" action="a14"/>
+            <key code="18" action="a1"/>
+            <key code="19" action="a2"/>
+            <key code="20" action="a3"/>
+            <key code="21" action="a4"/>
+            <key code="22" action="a6"/>
+            <key code="23" action="a5"/>
+            <key code="25" action="a9"/>
+            <key code="26" action="a7"/>
+            <key code="28" action="a8"/>
+            <key code="29" action="a0"/>
+            <key code="82" action="a0"/>
+            <key code="83" action="a1"/>
+            <key code="84" action="a2"/>
+            <key code="85" action="a3"/>
+            <key code="86" action="a4"/>
+            <key code="87" action="a5"/>
+            <key code="88" action="a6"/>
+            <key code="89" action="a7"/>
+            <key code="91" action="a8"/>
+            <key code="92" action="a9"/>
+        </keyMap>
+"""
+        expectedDvorak = """          <keyMap index="3">
+            <key code="0" action="a10"/>
+            <key code="4" action="a14"/>
+            <key code="16" action="a15"/>
+            <key code="34" action="a12"/>
+            <key code="45" action="a11"/>
+            <key code="2" action="a14"/>
+            <key code="18" action="a1"/>
+            <key code="19" action="a2"/>
+            <key code="20" action="a3"/>
+            <key code="21" action="a4"/>
+            <key code="22" action="a6"/>
+            <key code="23" action="a5"/>
+            <key code="25" action="a9"/>
+            <key code="26" action="a7"/>
+            <key code="28" action="a8"/>
+            <key code="29" action="a0"/>
+            <key code="82" action="a0"/>
+            <key code="83" action="a1"/>
+            <key code="84" action="a2"/>
+            <key code="85" action="a3"/>
+            <key code="86" action="a4"/>
+            <key code="87" action="a5"/>
+            <key code="88" action="a6"/>
+            <key code="89" action="a7"/>
+            <key code="91" action="a8"/>
+            <key code="92" action="a9"/>
+        </keyMap>
+"""
+        # print("converted from Qwerty to DVORAK:")
+        actualDvorak = convertKeyMapFromQwertyToDvorak(sampleQWERTY)
+        # print(actualDvorak)
+        self.assertEqual(actualDvorak.strip(), expectedDvorak.strip())
+
+        
     def test_convert_from_qwerty_to_dvorak(self):
         sampleQWERTY = """		<keyMap index="0" baseMapSet="mapSet" baseIndex="3">
 		<!-- Top row, from left to right on ANSI Keyboard -->

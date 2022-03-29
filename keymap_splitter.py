@@ -3,11 +3,11 @@ import re
 
 oneKeymapRegExp = re.compile(r"(<\s*keyMap.*?>.*?<\s*/\s*keyMap\s*>)", flags=re.IGNORECASE | re.DOTALL)
 
-beforeFirstKeymapRegExp = re.compile(r"(.*?)<\s*keymap.*?>", flags=re.IGNORECASE | re.DOTALL)
+beforeFirstKeymapRegExp = re.compile(r"^(.*?)<\s*keymap.*?>", flags=re.IGNORECASE | re.DOTALL)
 allKeyMapRegExp = re.compile(r"(<\s*keyMap.*?>.*<\s*/\s*keyMap\s*>)", flags=re.IGNORECASE | re.DOTALL) 
 # This one is greedy and will take from the first keymap element to the last one.
 
-afterLastKeymapRegExp = re.compile(r"<\s*/*keymap\s*>(.*)", flags=re.IGNORECASE | re.DOTALL)
+afterLastKeymapRegExp = re.compile(r"(?<=</keymap>)(.*?)$", flags=re.IGNORECASE | re.DOTALL)
 
 def hasKeyMap(xmlInput):
     return oneKeymapRegExp.search(xmlInput) is not None
@@ -19,30 +19,22 @@ def hasCloseKeyMapTag(xmlInput):
 def splitIntoKeymapsAndPartsBeforeAndAfterKeymaps(xmlInput):
     xmlBeforeKeymapsInput = beforeFirstKeymapRegExp.search(xmlInput)
     xmlKeymapsInput = allKeyMapRegExp.search(xmlInput)
-    xmlAfterKeymapsInput = afterLastKeymapRegExp.search(xmlInput)
+    xmlAfterKeymapsInput = xmlInput[len(xmlKeymapsInput.group(1)) + len(xmlBeforeKeymapsInput.group(1)):]
     
-    keymaps = splitIntoKeymaps(xmlKeymapsInput.group(0))
+    keymaps = splitIntoKeymaps(xmlKeymapsInput.group(1))
     output = []
     if xmlBeforeKeymapsInput:
-        output.append(xmlBeforeKeymapsInput.group(0))
+        output.append(xmlBeforeKeymapsInput.group(1))
     for keymap in keymaps:
         output.append(keymap)
 
 
     if xmlAfterKeymapsInput:
-        output.append(xmlAfterKeymapsInput.group(0))
+        output.append(xmlAfterKeymapsInput)
     return output
 
 def splitIntoKeymaps(xmlInput):
-    xmlBeforeKeymapsInput = beforeFirstKeymapRegExp.search(xmlInput)
-    print(xmlInput)
-    print(allKeyMapRegExp)
-    xmlKeymapsInput = allKeyMapRegExp.search(xmlInput)
-    xmlAfterKeymapsInput = afterLastKeymapRegExp.search(xmlInput)
-
-
-    print(xmlKeymapsInput)
-    keymaps = re.split(r"<\s*/\s*keyMap\s*>", xmlKeymapsInput.group(0), flags=re.IGNORECASE)
+    keymaps = re.split(r"<\s*/\s*keyMap\s*>", xmlInput, flags=re.IGNORECASE)
     keymapsRejoined = []  # we need to rejoin the closing tags
 
 
