@@ -14,11 +14,11 @@ from mac_keymap_translation import (
     convertKeyMapFromColemakToWorkman,
 )
 
-from keymap_splitter import splitIntoKeymaps
+from keymap_splitter import splitIntoKeymapsAndPartsBeforeAndAfterKeymaps
 
 
 def convertKeyMapsFromOneLayoutToAnother(xmlForKeyMaps, layoutConversionFunction):
-    keymaps = splitIntoKeymaps(xmlForKeyMaps)
+    keymaps = splitIntoKeymapsAndPartsBeforeAndAfterKeymaps(xmlForKeyMaps)
     return "".join(layoutConversionFunction(keymap) for keymap in keymaps)
 
 
